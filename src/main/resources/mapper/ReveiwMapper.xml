@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.project.mapper.ReviewMapper">
+
+	<!-- 리뷰 목록 + 검색 -->
+	<select id="selectReviews"
+		resultType="com.example.project.vo.ReviewVO">
+		SELECT R.*, U.UI_NICK_NAME, RS.RS_NAME
+		FROM REVIEW R
+		JOIN USER_INFO U ON
+		R.UI_NUM = U.UI_NUM
+		JOIN RESTAURANT RS ON R.RS_NUM = RS.RS_NUM
+		<where>
+			<if test="rvContent != null and rvContent != ''">
+				AND R.RV_CONTENT LIKE CONCAT('%', #{rvContent}, '%')
+			</if>
+			<if test="uiNickName != null and uiNickName != ''">
+				AND U.UI_NICK_NAME LIKE CONCAT('%', #{uiNickName}, '%')
+			</if>
+			<if test="rsName != null and rsName != ''">
+				AND RS.RS_NAME LIKE CONCAT('%', #{rsName}, '%')
+			</if>
+			<if test="rvStar != null">
+				AND R.RV_STAR = #{rvStar}
+			</if>
+		</where>
+		ORDER BY R.RV_NUM DESC
+	</select>
+
+	<!-- 단건 조회 -->
+	<select id="selectReview"
+		resultType="com.example.project.vo.ReviewVO">
+		SELECT R.*, U.UI_NICK_NAME, RS.RS_NAME
+		FROM REVIEW R
+		JOIN
+		USER_INFO U ON R.UI_NUM = U.UI_NUM
+		JOIN RESTAURANT RS ON R.RS_NUM =
+		RS.RS_NUM
+		WHERE R.RV_NUM = #{rvNum}
+	</select>
+
+	<!-- 등록 -->
+	<insert id="insertReview" useGeneratedKeys="true"
+		keyProperty="rvNum">
+		INSERT INTO REVIEW (
+		RS_NUM, UI_NUM, RV_CONTENT, RV_STAR,
+		RV_IMG_NAME, RV_IMG_PATH
+		) VALUES (
+		#{rsNum}, #{uiNum}, #{rvContent},
+		#{rvStar}, #{rvImgName}, #{rvImgPath}
+		)
+	</insert>
+
+	<!-- 수정 -->
+	<update id="updateReview">
+		UPDATE REVIEW
+		SET
+		RV_CONTENT = #{rvContent},
+		RV_STAR =
+		#{rvStar},
+		RV_IMG_NAME = #{rvImgName},
+		RV_IMG_PATH = #{rvImgPath},
+		LMODAT = DATE_FORMAT(NOW(), '%Y%m%d'),
+		LMOTIM = DATE_FORMAT(NOW(),
+		'%H%i%s')
+		WHERE RV_NUM = #{rvNum}
+	</update>
+
+	<!-- 삭제 -->
+	<delete id="deleteReview">
+		DELETE FROM REVIEW
+		WHERE RV_NUM = #{rvNum}
+	</delete>
+
+	<update id="updateViewCount">
+		UPDATE REVIEW
+		SET RV_VIEW_CNT = RV_VIEW_CNT + 1
+		WHERE
+		RV_NUM = #{rvNum}
+	</update>
+
+	<update id="increaseLikeCnt">
+		UPDATE review
+		SET RV_LIKE = RV_LIKE + 1
+		WHERE RV_NUM = #{rvNum}
+	</update>
+
+	<update id="decreaseLikeCnt">
+		UPDATE review
+		SET RV_LIKE = RV_LIKE - 1
+		WHERE RV_NUM = #{rvNum}
+	</update>
+
+
+
+</mapper>

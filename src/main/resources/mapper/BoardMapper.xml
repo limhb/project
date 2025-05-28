@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.project.mapper.BoardMapper">
+    <select id="selectBoards" resultType="com.example.project.vo.BoardVO">
+        SELECT BI.*, UI.UI_NICK_NAME
+        FROM BOARD_INFO BI
+        JOIN USER_INFO UI ON BI.UI_NUM = UI.UI_NUM
+        <where>
+            <if test='biTitle != null and biTitle != ""'>
+                AND BI.BI_TITLE LIKE CONCAT('%', #{biTitle}, '%')
+            </if>
+            <if test='biContent != null and biContent != ""'>
+                AND BI.BI_CONTENT LIKE CONCAT('%', #{biContent}, '%')
+            </if>
+            <if test='uiNickName != null and uiNickName != ""'>
+                AND UI.UI_NICKNAME LIKE CONCAT('%', #{uiNickName}, '%')
+            </if>
+        </where>
+        ORDER BY BI.BI_NUM DESC
+    </select>
+
+    <select id="selectBoard" resultType="com.example.project.vo.BoardVO">
+        SELECT BI.*, UI.UI_NICK_NAME
+        FROM BOARD_INFO BI
+        JOIN USER_INFO UI ON BI.UI_NUM = UI.UI_NUM
+        WHERE BI.BI_NUM = #{biNum}
+    </select>
+
+    <insert id="insertBoard" useGeneratedKeys="true" keyProperty="biNum">
+        INSERT INTO BOARD_INFO (
+            UI_NUM, BI_TITLE, BI_CONTENT
+        ) VALUES (
+            #{uiNum}, #{biTitle}, #{biContent}
+        )
+    </insert>
+
+    <update id="updateBoard">
+        UPDATE BOARD_INFO
+        SET 
+            BI_TITLE = #{biTitle},
+            BI_CONTENT = #{biContent},
+            LMODAT = DATE_FORMAT(NOW(), '%Y%m%d'),
+            LMOTIM = DATE_FORMAT(NOW(), '%H%i%s')
+        WHERE BI_NUM = #{biNum}
+    </update>
+
+    <delete id="deleteBoard">
+        DELETE FROM BOARD_INFO
+        WHERE BI_NUM = #{biNum}
+    </delete>
+
+    <update id="updateViewCount">
+        UPDATE BOARD_INFO
+        SET BI_VIEW_CNT = BI_VIEW_CNT + 1
+        WHERE BI_NUM = #{biNum}
+    </update>
+
+</mapper>

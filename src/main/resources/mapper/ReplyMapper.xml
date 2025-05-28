@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.project.mapper.ReplyMapper">
+
+    <select id="selectCommentsByBoardNum" resultType="com.example.project.vo.ReplyVO">
+        SELECT BC.*, UI.UI_NICK_NAME
+        FROM BOARD_COMMENT BC
+        JOIN USER_INFO UI ON BC.UI_NUM = UI.UI_NUM
+        WHERE BC.BI_NUM = #{biNum}
+        ORDER BY BC.BC_NUM ASC
+    </select>
+
+    <select id="selectComment" resultType="com.example.project.vo.ReplyVO">
+        SELECT BC.*, UI.UI_NICK_NAME
+        FROM BOARD_COMMENT BC
+        JOIN USER_INFO UI ON BC.UI_NUM = UI.UI_NUM
+        WHERE BC.BC_NUM = #{bcNum}
+    </select>
+
+    <insert id="insertComment" useGeneratedKeys="true" keyProperty="bcNum">
+        INSERT INTO BOARD_COMMENT (
+            BI_NUM, UI_NUM, BC_CONTENT
+        ) VALUES (
+            #{biNum}, #{uiNum}, #{bcContent}
+        )
+    </insert>
+
+    <update id="updateComment">
+        UPDATE BOARD_COMMENT
+        SET 
+            BC_CONTENT = #{bcContent},
+            LMODAT = DATE_FORMAT(NOW(), '%Y%m%d'),
+            LMOTIM = DATE_FORMAT(NOW(), '%H%i%s')
+        WHERE BC_NUM = #{bcNum}
+    </update>
+
+    <delete id="deleteComment">
+        DELETE FROM BOARD_COMMENT
+        WHERE BC_NUM = #{bcNum}
+    </delete>
+
+</mapper>
