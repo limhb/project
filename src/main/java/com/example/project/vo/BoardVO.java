@@ -17,6 +17,7 @@ public class BoardVO {
   private String cretim;
   private String lmodat;
   private String lmotim;
+  private int commentCount;
 
   // 사용자 닉네임 포함 (조인용)
   private String uiNickName;

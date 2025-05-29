@@ -29,7 +29,7 @@ public class ReplyController {
 
   // 댓글 단건 조회
   @GetMapping("/reply/{bcNum}")
-  public ReplyVO getReply(@PathVariable int bcNum) {
+  public ReplyVO getReply(@PathVariable("bcNum") int bcNum) {
       return replyService.getReply(bcNum);
   }
 
@@ -47,7 +47,7 @@ public class ReplyController {
 
   // 댓글 삭제
   @DeleteMapping("/reply/delete/{bcNum}")
-  public int deleteReply(@PathVariable int bcNum) {
+  public int deleteReply(@PathVariable("bcNum") int bcNum) {
       return replyService.deleteReply(bcNum);
   }
 }
