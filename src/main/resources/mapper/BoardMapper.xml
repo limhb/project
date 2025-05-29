@@ -6,10 +6,12 @@
 		SELECT
 		BI.*,
 		UI.UI_NICK_NAME,
-		(SELECT COUNT(*) FROM BOARD_COMMENT BC WHERE BC.BI_NUM = BI.BI_NUM) AS
+		(SELECT COUNT(*) FROM BOARD_COMMENT BC
+		WHERE BC.BI_NUM = BI.BI_NUM) AS
 		commentCount
 		FROM BOARD_INFO BI
-		JOIN USER_INFO UI ON BI.UI_NUM = UI.UI_NUM
+		JOIN
+		USER_INFO UI ON BI.UI_NUM = UI.UI_NUM
 		<where>
 			<if test='biTitle != null and biTitle != ""'>
 				AND BI.BI_TITLE LIKE CONCAT('%', #{biTitle}, '%')
@@ -28,7 +30,8 @@
 		resultType="com.example.project.vo.BoardVO">
 		SELECT BI.*, UI.UI_NICK_NAME
 		FROM BOARD_INFO BI
-		JOIN USER_INFO UI ON BI.UI_NUM = UI.UI_NUM
+		JOIN
+		USER_INFO UI ON BI.UI_NUM = UI.UI_NUM
 		WHERE BI.BI_NUM = #{biNum}
 	</select>
 
@@ -36,7 +39,8 @@
 		keyProperty="biNum">
 		INSERT INTO BOARD_INFO (
 		UI_NUM, BI_TITLE, BI_CONTENT
-		) VALUES (
+		)
+		VALUES (
 		#{uiNum}, #{biTitle}, #{biContent}
 		)
 	</insert>
@@ -45,9 +49,11 @@
 		UPDATE BOARD_INFO
 		SET
 		BI_TITLE = #{biTitle},
-		BI_CONTENT = #{biContent},
+		BI_CONTENT
+		= #{biContent},
 		LMODAT = DATE_FORMAT(NOW(), '%Y%m%d'),
-		LMOTIM = DATE_FORMAT(NOW(), '%H%i%s')
+		LMOTIM =
+		DATE_FORMAT(NOW(), '%H%i%s')
 		WHERE BI_NUM = #{biNum}
 	</update>
 
@@ -55,6 +61,7 @@
 		DELETE FROM BOARD_INFO
 		WHERE BI_NUM = #{biNum}
 	</delete>
+
 
 	<update id="updateViewCount">
 		UPDATE BOARD_INFO

@@ -18,4 +18,6 @@ public interface ReplyMapper {
 
   // 댓글 삭제
   int deleteComment(int bcNum);
+  
+  int deleteCommentsByBoardId(int biNum);
 }
